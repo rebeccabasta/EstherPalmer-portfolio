@@ -1,5 +1,5 @@
 ---
-title: "My website and data analysis portfolio"
+title: "Esther Palmer's website and data analysis portfolio"
 ---
 
 
