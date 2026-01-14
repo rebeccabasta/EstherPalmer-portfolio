@@ -1,15 +1,15 @@
 ---
-title: "About me"
+title: "About Esther"
 ---
 
-#Background I grew up in Northern Virginia and recieved by B.S. in Microbiology from Virginia Tech in 2023. I currently research *Salmonella* in water, and ask questions like: How does *Salmonella* get into water? How does *Salmonella* move through a creek? How long does *Salmonella* stay in a creek? and What adaptations do different serovars of *Salmonella* use to survive in water?
+# Background
+
+I grew up in Northern Virginia and recieved by B.S. in Microbiology from Virginia Tech in 2023. I currently research *Salmonella* in water, and ask questions like: How does *Salmonella* get into water? How does *Salmonella* move through a creek? How long does *Salmonella* stay in a creek? and What adaptations do different serovars of *Salmonella* use to survive in water?
 
 I have a particular interest in microbial genomics and transcriptomics. I have done some analysis of RNA-seq data, and some genomic analysis from Whole Genome Sequencing.
 
 In this course I hope to learn about tools for processing large data sets and more bioinformatics skills.
 
-One interesting thing about me is that I am well known for my terrible puns. 
-![Alt text](398CBB43-8970-4BF2-902C-FC664FE8040B.jpeg)
+One interesting thing about me is that I am well known for my terrible puns. ![Alt text](398CBB43-8970-4BF2-902C-FC664FE8040B.jpeg)
 
-[text](https://www.youtube.com/watch?v=mvrh5TYixnU)
-This is a video about the use of Tn-seq in Rhodobacter that does a good job describing how a Tn-seq dataset is generated. I plan on doing something similar for my research in _Salmonella_.
+[Tn-seq](https://www.youtube.com/watch?v=mvrh5TYixnU) This is a video about the use of Tn-seq in Rhodobacter that does a good job describing how a Tn-seq dataset is generated. I plan on doing something similar soon for my research in *Salmonella*.
