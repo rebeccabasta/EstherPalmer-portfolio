@@ -62,3 +62,27 @@ fit2 <- lm(year2000$life_expectancy ~ year2000$population)
 summary(fit2)
 ```
 I used the help command to figure out what I needed to input into the lm command. It said the format was response ~ predictor. It also looked like I could set several responses and predictors.
+
+This section is contributed by KATHERINELORUSSO
+```{r}
+library(dplyr)
+library(ggplot2)
+str(us_contagious_diseases)
+#str function was used to see how many observations and variables (16065 observations & 6 variables)
+summary(us_contagious_diseases)
+#summary was used to view the variables and statistical values of the variables. 
+
+GAdata <- us_contagious_diseases %>% filter(state == "Georgia")
+#I wanted to only look at Georgia data, so I used the filter function and named it GAdata.
+GAmumps <- GAdata %>%filter(disease=="Mumps") %>%select(-weeks_reporting, -population)
+#I then wanted to only look at Mumps, so I used the filter function. I also used the select(-) because I just wanted to have the count and year values. 
+summary(GAmumps)
+
+ggplot(GAmumps, aes(year,count))+
+    geom_point()+
+    scale_x_continuous(breaks=seq(1968,2002, by=3))
+#I used the ggplot function to set year on the x axis and count on the y axis and the geom_point() function to create a scatter plot. It is seen that there was an upwards trend in cases from until around 1998, a major spike in 1989, and a decrease in the following years. 
+model <- glm(count~year, poisson, data=GAmumps)
+summary(model)
+#I used a generalized linear model to see if there is an association between year and count. After doing research, the poisson distribution was the best fit because this model is counts over time. There is a significant negative correlation of -0.011243 between year and count of Mumps in Georgia. 
+``` 
