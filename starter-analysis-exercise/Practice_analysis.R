@@ -29,3 +29,8 @@ inf_LE <- data.frame(africadata$infant_mortality, africadata$life_expectancy)
 #this one is for infant mortality and Life expectancy
 str(inf_LE)
 #This checks to make sure I got it right
+
+pop_LE <- data.frame(africadata$population, africadata$life_expectancy)
+#This creates a new dataframe for population and life expectancy data
+str(pop_LE)
+#This checks that I have everything right
