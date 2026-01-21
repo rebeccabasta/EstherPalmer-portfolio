@@ -52,3 +52,4 @@ str(year2000)
 plot(year2000$infant_mortality, year2000$life_expectancy)
 
 plot(year2000$population, year2000$life_expectancy, log = "x")
+```
