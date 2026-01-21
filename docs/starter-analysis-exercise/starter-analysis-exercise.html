@@ -315,6 +315,7 @@ window.Quarto = {
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#the log function is where you can specify which axis should be in log, in this case population</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>My hypothesis for the streaks of data we see is that they are individual countries over time year_inf &lt;- data.frame(africadata<span class="math inline">\(year, africadata\)</span>infant_mortality) #this creates a matrix with year and infant mortality year_inf[is.na(year_inf)] &lt;- “A” #this line rewrites the dataset, changing all NA’s to A missing &lt;- subset(year_inf, (africadata.infant_mortality == “A”)) #this makes a new dataset with the subset function that pulls out all the years with A as a value #This didn’t work with NA which is why I changed it to A. Not the most elegant solution but it works str(missing) #this line is for checking</p>
+<p>year2000 &lt;- subset(africadata, (year == “2000”)) #this creates a new data.frame with all the data from the year 2000 from africadata str(year2000) #this is for checking</p>
 
 
 

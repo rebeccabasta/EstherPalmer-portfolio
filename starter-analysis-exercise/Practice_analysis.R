@@ -56,3 +56,6 @@ missing <- subset(year_inf, (africadata.infant_mortality == "A"))
 #This didn't work with NA which is why I changed it to A. Not the most elegant solution but it works
 str(missing)
 #this line is for checking
+
+year2000 <- subset(africadata, (year == "2000"))
+str(year2000)
