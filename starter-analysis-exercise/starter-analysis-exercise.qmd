@@ -62,3 +62,37 @@ fit2 <- lm(year2000$life_expectancy ~ year2000$population)
 summary(fit2)
 ```
 I used the help command to figure out what I needed to input into the lm command. It said the format was response ~ predictor. It also looked like I could set several responses and predictors.
+
+This section is contributed by KATHERINELORUSSO
+```{r}
+library(dplyr)
+library(ggplot2)
+str(us_contagious_diseases)
+#str function was used to see how many observations and variables (16065 observations & 6 variables)
+summary(us_contagious_diseases)
+#summary was used to view the variables and statistical values of the variables. 
+
+GAmumps <- subset(us_contagious_diseases,state == "Georgia" & disease == "Mumps")
+#I wanted to only look at Georgia & Mumps data, so I used the filter function and named it GAdmumps.
+GAmumps2 <- data.frame(GAmumps$year, GAmumps$count)
+#I then created a dataset of year and count for mumps. 
+summary(GAmumps2)
+
+GAmeasles <- subset(us_contagious_diseases,state == "Georgia" & disease == "Measles")
+#I wanted to only look at Georgia & Measles data, so I used the filter function and named it GAmeasles.
+GAmeasles2 <- data.frame(GAmeasles$year, GAmeasles$count)
+#I then created a dataset of year and count for mumps. 
+summary(GAmeasles2)
+
+plot(GAmumps2)
+#This plot shows an increase from 1970-1989, a spike in 1990, then a decrease. 
+plot(GAmeasles2)
+#this plot shows a significant decrease in cases after 1960. 
+year_measles <- subset(us_contagious_diseases, (year=="1934" & disease=="Measles"))
+#I now used the subset function to only look at measles cases from 2000
+plot(year_measles$count, year_measles$population)
+#I plotted count of measles cases on the x axis and population of each state on the y axis. 
+fit1 <- lm(year_measles$population ~ year_measles$count)
+summary(fit1)
+#There is a significant positive correlation between population and measles count in 1934. 
+``` 
