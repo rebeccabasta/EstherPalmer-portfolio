@@ -384,6 +384,138 @@ F-statistic: 0.2549 on 1 and 49 DF,  p-value: 0.6159</code></pre>
 </div>
 </div>
 <p>I used the help command to figure out what I needed to input into the lm command. It said the format was response ~ predictor. It also looked like I could set several responses and predictors.</p>
+<p>This section is contributed by KATHERINELORUSSO</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(us_contagious_diseases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   16065 obs. of  6 variables:
+ $ disease        : Factor w/ 7 levels "Hepatitis A",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ state          : Factor w/ 51 levels "Alabama","Alaska",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ year           : num  1966 1967 1968 1969 1970 ...
+ $ weeks_reporting: num  50 49 52 49 51 51 45 45 45 46 ...
+ $ count          : num  321 291 314 380 413 378 342 467 244 286 ...
+ $ population     : num  3345787 3364130 3386068 3412450 3444165 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#str function was used to see how many observations and variables (16065 observations &amp; 6 variables)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(us_contagious_diseases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        disease            state            year      weeks_reporting
+ Hepatitis A:2346   Alabama   :  315   Min.   :1928   Min.   : 0.00  
+ Measles    :3825   Alaska    :  315   1st Qu.:1950   1st Qu.:31.00  
+ Mumps      :1785   Arizona   :  315   Median :1975   Median :46.00  
+ Pertussis  :2856   Arkansas  :  315   Mean   :1971   Mean   :37.38  
+ Polio      :2091   California:  315   3rd Qu.:1990   3rd Qu.:50.00  
+ Rubella    :1887   Colorado  :  315   Max.   :2011   Max.   :52.00  
+ Smallpox   :1275   (Other)   :14175                                 
+     count          population      
+ Min.   :     0   Min.   :   86853  
+ 1st Qu.:     7   1st Qu.: 1018755  
+ Median :    69   Median : 2749249  
+ Mean   :  1493   Mean   : 4107584  
+ 3rd Qu.:   525   3rd Qu.: 4996229  
+ Max.   :132342   Max.   :37607525  
+                  NA's   :214       </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary was used to view the variables and statistical values of the variables. </span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>GAmumps <span class="ot">&lt;-</span> <span class="fu">subset</span>(us_contagious_diseases,state <span class="sc">==</span> <span class="st">"Georgia"</span> <span class="sc">&amp;</span> disease <span class="sc">==</span> <span class="st">"Mumps"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#I wanted to only look at Georgia &amp; Mumps data, so I used the filter function and named it GAdmumps.</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>GAmumps2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(GAmumps<span class="sc">$</span>year, GAmumps<span class="sc">$</span>count)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#I then created a dataset of year and count for mumps. </span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(GAmumps2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  GAmumps.year  GAmumps.count  
+ Min.   :1968   Min.   :  1.0  
+ 1st Qu.:1976   1st Qu.:  6.0  
+ Median :1985   Median : 18.0  
+ Mean   :1985   Mean   : 29.2  
+ 3rd Qu.:1994   3rd Qu.: 38.5  
+ Max.   :2002   Max.   :103.0  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>GAmeasles <span class="ot">&lt;-</span> <span class="fu">subset</span>(us_contagious_diseases,state <span class="sc">==</span> <span class="st">"Georgia"</span> <span class="sc">&amp;</span> disease <span class="sc">==</span> <span class="st">"Measles"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#I wanted to only look at Georgia &amp; Measles data, so I used the filter function and named it GAmeasles.</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>GAmeasles2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(GAmeasles<span class="sc">$</span>year, GAmeasles<span class="sc">$</span>count)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#I then created a dataset of year and count for mumps. </span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(GAmeasles2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> GAmeasles.year GAmeasles.count  
+ Min.   :1928   Min.   :    0.0  
+ 1st Qu.:1946   1st Qu.:    6.5  
+ Median :1965   Median :  244.0  
+ Mean   :1965   Mean   : 2073.1  
+ 3rd Qu.:1984   3rd Qu.: 3215.0  
+ Max.   :2002   Max.   :22965.0  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAmumps2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="starter-analysis-exercise_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This plot shows an increase from 1970-1989, a spike in 1990, then a decrease. </span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAmeasles2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="starter-analysis-exercise_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#this plot shows a significant decrease in cases after 1960. </span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>year_measles <span class="ot">&lt;-</span> <span class="fu">subset</span>(us_contagious_diseases, (year<span class="sc">==</span><span class="st">"1934"</span> <span class="sc">&amp;</span> disease<span class="sc">==</span><span class="st">"Measles"</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#I now used the subset function to only look at measles cases from 2000</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(year_measles<span class="sc">$</span>count, year_measles<span class="sc">$</span>population)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="starter-analysis-exercise_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#I plotted count of measles cases on the x axis and population of each state on the y axis. </span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(year_measles<span class="sc">$</span>population <span class="sc">~</span> year_measles<span class="sc">$</span>count)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = year_measles$population ~ year_measles$count)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-3852283  -829103  -189625   484704  8305549 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        909749.73  346349.07   2.627   0.0116 *  
+year_measles$count    113.08      15.57   7.264 3.25e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1806000 on 47 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.5289,    Adjusted R-squared:  0.5189 
+F-statistic: 52.77 on 1 and 47 DF,  p-value: 3.254e-09</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#There is a significant positive correlation between population and measles count in 1934. </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 
 
 
