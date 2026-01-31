@@ -12,6 +12,8 @@ website:
         menu:
           - text: "Starter Analysis Exercise"
             file: starter-analysis-exercise/starter-analysis-exercise.qmd
+          - text: "READY Analysis Exercise"
+            file: ready-exercise/report.html
     right:
       - icon: github 
         href: https://github.com/EstherPalmer/EstherPalmer-portfolio        
