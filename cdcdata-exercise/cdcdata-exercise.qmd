@@ -161,4 +161,4 @@ p3 <- ggplot(plot_subset, aes(x = Food_category, fill = Serotype)) +
   labs(x = "Food_category", y = "count", fill = "Serotype")
 p3
 ```
-They synthetic data is a little different then the orginal data because the food catergory and serotype are random in the synthetic data. Other then that, the synthetic data and orginal data are the same. They both include 339 rows, 10 columns, and the same variables.
+The synthetic data is a little different then the orginal data because the food catergory and serotype are random in the synthetic data. Other then that, the synthetic data and orginal data are the same. They both include 339 rows, 10 columns, and the same variables.
