@@ -70,3 +70,95 @@ p3 <- d2 %>% ggplot(aes(fill=BEAM.Serotype, x=BEAM.Food_category)) + geom_bar()
 plot(p3)
 ```
 This gets counts of these top commodities and the top serovars, then proportion of each commodity that responds to each serovar!
+
+# This section is contributed by Rebecca Basta
+AI prompt used: "Write R code to generate synthetic outbreak data similar in structure to CDC BEAM Salmonella dataset with 339 rows, 10 columns, and categorical + count variables."
+
+```{r}
+set.seed(123)  # reproducibility
+```
+
+```{r}
+# Number of observations similar to original
+n <- 339
+
+# Create synthetic dataset
+synthetic_data <- data.frame(
+  Food_category = sample(
+    c("Chicken", "Beef", "Pork", "Eggs", "Vegetables", 
+      "Fruit", "Seafood", "Dairy", "Turkey"),
+    n, replace = TRUE
+  ),
+  
+  Serotype = sample(
+    paste("Serotype", 1:36),
+    n, replace = TRUE
+  ),
+  
+  Year_first_ill = sample(2021:2024, n, replace = TRUE),
+  
+  Year = sample(2021:2024, n, replace = TRUE),
+  
+  No_of_illnesses = rpois(n, lambda = 25),
+  
+  No_of_outbreaks = rpois(n, lambda = 3)
+)
+
+# Running total by year range
+synthetic_data <- synthetic_data %>%
+  arrange(Year) %>%
+  mutate(Running_total_by_year_range = cumsum(No_of_illnesses))
+
+glimpse(synthetic_data)
+summary(synthetic_data)
+```
+
+```{r}
+#renaming the serotypes from my synthetic data, so the plots can have the correct axis names
+#Before I did this, the plots were blank. I asked AI why they were blank and it was because the variable names didn't match, which is why I recoded them.
+synthetic_data <- synthetic_data %>%
+  mutate(
+    Serotype = recode(
+      Serotype,
+      "Serotype 1" = "Typhimurium",
+      "Serotype 2" = "Braenderup",
+      "Serotype 3" = "Muenchen",
+      "Serotype 4" = "Newport",
+      "Serotype 5" = "I 4,[5],12:i:-"
+    )
+  )
+```
+
+```{r}
+#Created a subset for the plots to have the same plots
+plot_subset <- subset(
+  synthetic_data,
+  Food_category %in% c("Beef", "Chicken", "Pork", "Turkey") &
+  Serotype %in% c(
+    "Typhimurium",
+    "Braenderup",
+    "Muenchen",
+    "Newport",
+    "I 4,[5],12:i:-"
+  )
+)
+```
+
+Plots
+```{r}
+p1 <- ggplot(plot_subset, aes(x = Food_category)) +
+  geom_bar() +
+  labs(x = "Food_category (synthetic data)", y = "count")
+p1
+
+p2 <- ggplot(plot_subset, aes(x = Serotype)) +
+  geom_bar() +
+  labs(x = "Serotype (synthetic data)", y = "count")
+p2
+
+p3 <- ggplot(plot_subset, aes(x = Food_category, fill = Serotype)) +
+  geom_bar() +
+  labs(x = "Food_category", y = "count", fill = "Serotype")
+p3
+```
+They synthetic data is a little different then the orginal data because the food catergory and serotype are random in the synthetic data. Other then that, the synthetic data and orginal data are the same. They both include 339 rows, 10 columns, and the same variables.
