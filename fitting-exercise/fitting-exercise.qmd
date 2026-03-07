@@ -1,0 +1,44 @@
+---
+title: "Fitting Exercise"
+---
+
+First to install packages
+```{r}
+library(here)
+library(dplyr)
+library(ggplot2)
+```
+
+Then to load data
+```{r}
+data_location <- here::here("fitting-exercise", "Mavoglurant_A2121_nmpk.csv")
+df <- read.csv(data_location)
+```
+
+Plotting outcome (DV) as a function of time colored by dose and using ID as a grouping factor
+```{r}
+p1 <- ggplot(df, aes(x=TIME, y=DV, group=ID, color=DOSE)) + geom_line()
+plot(p1)
+```
+
+remove all OCC=2 entries, keep only OCC=1
+```{r}
+df2 <- subset(df, (OCC == 1))
+```
+
+Exclude all Time=0, found sum of DV for each ID, create a new data frame with only time 0 and a new variable Y that contains amount of drug delivered over the whole experiment
+```{r}
+df3 <- subset(df2, (TIME != 0))
+df4 <- df3 %>% group_by(ID) %>% summarise(Y = sum(DV))
+df5 <- subset(df2, (TIME == 0))
+df6 <- left_join(x=df5, y=df4, by=c("ID"))
+```
+
+Keep only variables Y, Dose, Age, Sex, Race, WT, HT. Convert Race and Sex to factors
+```{r}
+df7 <- select(df6,Y, DOSE, AGE, SEX, RACE, WT, HT)
+df7$SEX <- as.factor(df7$SEX)
+df7$RACE <- as.factor(df7$RACE)
+summary(df7)
+```
+
