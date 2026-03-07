@@ -7,6 +7,7 @@ First to install packages
 library(here)
 library(dplyr)
 library(ggplot2)
+library(tidymodels)
 ```
 
 Then to load data
@@ -74,3 +75,38 @@ hisHT <- ggplot(df7, aes(x=HT)) + geom_histogram()
 plot(hisHT)
 ```
 
+fit a linear model to Y using Dose and calculate RMSE/R2
+```{r}
+lm_mod1 <- linear_reg()
+lm_fit1 <- lm_mod1 %>% fit(Y ~ DOSE, data = df7)
+lm_fit1
+pred1 <- predict(lm_fit1, df7) %>% bind_cols(df7)
+met1 <- metrics(pred1, truth = Y, estimate = .pred)
+met1
+```
+
+fit a linear model to Y using all predictors and calculate RMSE/R2
+```{r}
+lm_mod2 <- linear_reg()
+lm_fit2 <- lm_mod2 %>% fit(Y ~ DOSE * AGE * SEX * WT * HT * RACE, data = df7)
+lm_fit2
+pred2 <- predict(lm_fit2, df7) %>% bind_cols(df7)
+met2 <- metrics(pred2, truth = Y, estimate = .pred)
+met2
+```
+
+fit a linear model to SEX using Dose, and one using all predictors, and calculate ROC-AUC
+```{r}
+lm_mod3 <- logistic_reg()
+lm_fit3 <- lm_mod3 %>% fit(SEX ~ DOSE, data = df7)
+lm_fit3
+pred3 <- predict(lm_fit3, df7) %>% bind_cols(df7)
+met3 <- metrics(pred3, truth = SEX, estimate = .pred_class)
+met3
+roc_auc(pred3, truth = SEX, .pred_1)
+
+lm_mod4 <- logistic_reg()
+lm_fit4 <- lm_mod4 %>% fit(SEX ~ DOSE * Y * AGE * WT * HT * RACE, data = df7)
+lm_fit4
+
+```
