@@ -84,6 +84,8 @@ pred1 <- predict(lm_fit1, df7) %>% bind_cols(df7)
 met1 <- metrics(pred1, truth = Y, estimate = .pred)
 met1
 ```
+In this model dose has a coefficient of 58 which seems like a high number to me. (whenever my collaborators run models we get numbers like 1.2, although those are probably somewhat different models.) The R2 is .516 which is also decent in my opinion. I still have some issues figuring out how to interpret the RMSE and MAE though.
+
 
 fit a linear model to Y using all predictors and calculate RMSE/R2
 ```{r}
@@ -94,6 +96,8 @@ pred2 <- predict(lm_fit2, df7) %>% bind_cols(df7)
 met2 <- metrics(pred2, truth = Y, estimate = .pred)
 met2
 ```
+This one has a lower RMSE/MAE and a higher R2, so I can conclude that it is probably a better model than the first.
+
 
 fit a linear model to SEX using Dose, and one using all predictors, and calculate ROC-AUC
 ```{r}
@@ -101,12 +105,13 @@ lm_mod3 <- logistic_reg()
 lm_fit3 <- lm_mod3 %>% fit(SEX ~ DOSE, data = df7)
 lm_fit3
 pred3 <- predict(lm_fit3, df7, type = "prob") %>% bind_cols(df7)
-met3 <- metrics(pred3, truth = SEX, estimate = .pred_class)
-met3
-roc_auc(pred3, truth = SEX, .pred_class)
+roc_auc(pred3, truth = SEX, .pred_1)
 
 lm_mod4 <- logistic_reg()
 lm_fit4 <- lm_mod4 %>% fit(SEX ~ DOSE * Y * AGE * WT * HT * RACE, data = df7)
 lm_fit4
-
+pred4 <- predict(lm_fit4, df7, type = "prob") %>% bind_cols(df7)
+roc_auc(pred4, truth = SEX, .pred_1)
 ```
+
+The roc_auc is 1 for the last model which is super interesting. I guess that means that all the data put together are very good at predicting sex. This makes sense given that a lot of the things in the model are correlated with sex (height/weight, and doeses tend to be different for men/women). In model 3, dose alone had an ROC of .6, so it's probably a decent predictor of sex.
