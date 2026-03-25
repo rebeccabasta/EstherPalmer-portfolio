@@ -140,6 +140,7 @@ two linear models for Y (continuous outcome of interest)
 Model 1: dose as only pred
 Model 2: all predictors
 ```{r}
+set.seed(rngseed)
 lm_mod5 <- linear_reg()
 lm_fit5 <- lm_mod5 %>% fit(Y ~ DOSE, data = train)
 lm_fit5
@@ -160,5 +161,29 @@ NM_fit
 pred7 <- predict(NM_fit, train) %>% bind_cols(train)
 met7 <- rmse(pred7, truth = Y, estimate = .pred)
 met7
+```
+
+I set the random seed correctly, however my values are different from the ones we're supposed to get. I got 948 for the null which is correct, 703 for model 1 (correct value 702), and 578 for model 2 (correct value 627).
+This does mean that model 2 is currently performing best as it has the lowest rmse
+
+Now I need to do a 10-fold CV
+```{r}
+folds <- vfold_cv(train, v = 10)
+folds
+
+lm_wf1 <- workflow() %>% add_model(lm_mod5) %>% add_formula(Y ~ DOSE)
+lm_fit_cv1 <- lm_wf1 %>% fit_resamples(folds)
+lm_fit_cv1
+collect_metrics(lm_fit_cv1)
+
+lm_wf2 <- workflow() %>% add_model(lm_mod5) %>% add_formula(Y ~ DOSE * AGE * SEX * WT * HT)
+lm_fit_cv2 <- lm_wf2 %>% fit_resamples(folds)
+lm_fit_cv2
+collect_metrics(lm_fit_cv2)
+
+NM_wf <- workflow() %>% add_model(NM) %>% add_formula(Y ~ .)
+NM_fit_cv <- NM_wf %>% fit_resamples(folds)
+NM_fit_cv
+collect_metrics(NM_fit_cv)
 ```
 
