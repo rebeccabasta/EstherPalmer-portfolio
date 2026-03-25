@@ -187,3 +187,31 @@ NM_fit_cv
 collect_metrics(NM_fit_cv)
 ```
 
+Well the rmse for the null model was similar but different at 943, SE at 66.2. RMSE for the second model with the full formula was much worse at 2003, while rmse for the Y~DOSE model was 687.
+
+Now I need a different random seed
+```{r}
+set.seed(347)
+folds2 <- vfold_cv(train, v = 10)
+folds2
+
+lm_wf3 <- workflow() %>% add_model(lm_mod5) %>% add_formula(Y ~ DOSE)
+lm_fit_cv3 <- lm_wf3 %>% fit_resamples(folds2)
+lm_fit_cv3
+collect_metrics(lm_fit_cv3)
+
+lm_wf4 <- workflow() %>% add_model(lm_mod5) %>% add_formula(Y ~ DOSE * AGE * SEX * WT * HT)
+lm_fit_cv4 <- lm_wf4 %>% fit_resamples(folds2)
+lm_fit_cv4
+collect_metrics(lm_fit_cv2)
+
+NM_wf2 <- workflow() %>% add_model(NM) %>% add_formula(Y ~ .)
+NM_fit_cv2 <- NM_wf2 %>% fit_resamples(folds2)
+NM_fit_cv2
+collect_metrics(NM_fit_cv2)
+```
+
+Null model is now at 938, similar but slightly different
+second model is still at 2003
+First model is now at 684.
+Similar, but slightly different to the other random seed.
